@@ -15,8 +15,10 @@ function Movie (id,title,releaseDate,posterPath,overview){
 //routes
 app.get('/trending',listTrendingMoviesHandler);
 app.get('/search',searchHandler);
+
 //TV Certifications
 app.get('/tv_certifications',tvCertificationsHandler);
+
 //Movie Certifications
 app.get('/movie_certifications',movieCertificationsHandler);
 
@@ -39,6 +41,8 @@ function listTrendingMoviesHandler(req,res){
         console.log(error)
     })
 
+
+
 }
 // search function
 function searchHandler(req, res) {
@@ -60,7 +64,10 @@ function searchHandler(req, res) {
         .catch(error => {
             console.log(error);
         });
+
+
 }
+
 //tvCertificationsHandler function
 function tvCertificationsHandler(req,res){
     let url =`https://api.themoviedb.org/3/certification/tv/list?api_key=60b47f14771c44b1da955019650eb9d2`
@@ -105,14 +112,7 @@ function getFavoriteHandler(req,res){
     res.send("Welcome to Favorite Page")
 }
 
-//Create a route with a method of get and a path of /. The callback should use the provided JSON data.
-// app.get('/',getJsonDataHandler)
-// function getJsonDataHandler(req,res){
-//         let newData =new Data(jsonData.title,jsonData.poster_path,jsonData.overview)
-//         console.log(newData)
-        
-//     res.json((newData))
-// }
+
 //Create a function to handle the server error (status 500)
 app.get('/error',(req,res)=>res.send(error()))
 app.use(function(err,req,res,text){
