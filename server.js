@@ -105,14 +105,7 @@ function getFavoriteHandler(req,res){
     res.send("Welcome to Favorite Page")
 }
 
-//Create a route with a method of get and a path of /. The callback should use the provided JSON data.
-// app.get('/',getJsonDataHandler)
-// function getJsonDataHandler(req,res){
-//         let newData =new Data(jsonData.title,jsonData.poster_path,jsonData.overview)
-//         console.log(newData)
-        
-//     res.json((newData))
-// }
+
 //Create a function to handle the server error (status 500)
 app.get('/error',(req,res)=>res.send(error()))
 app.use(function(err,req,res,text){
