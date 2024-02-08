@@ -1,7 +1,9 @@
 const express = require('express')
 const app = express()
+require('dotenv').config()
 const axios = require('axios');
-const port = 3007
+const port = process.env.PORT;
+const apiKey=process.env.API_KEY;
 const jsonData = require('./Movie Data/data.json')
 
 //Create a constructor function to ensure your data follow the same format.
@@ -11,9 +13,9 @@ function Movie (id,title,releaseDate,posterPath,overview){
     this.releaseDate=releaseDate
     this.posterPath=posterPath
     this.overview=overview
-}
+};
 //routes
-app.get('/trending',listTrendingMoviesHandler);
+app.get('/trending', listTrendingMoviesHandler);
 app.get('/search',searchHandler);
 
 //TV Certifications
@@ -26,8 +28,8 @@ app.get('/movie_certifications',movieCertificationsHandler);
 
 
 //functions
-function listTrendingMoviesHandler(req,res){
-    let url =`https://api.themoviedb.org/3/trending/all/week?api_key=60b47f14771c44b1da955019650eb9d2`
+function listTrendingMoviesHandler (req,res){
+    let url =`https://api.themoviedb.org/3/trending/all/week?api_key=${apiKey}`
     axios.get(url)
     .then(result=>{
         console.log(result.data.results)
@@ -43,12 +45,12 @@ function listTrendingMoviesHandler(req,res){
 
 
 
-}
+};
 // search function
 function searchHandler(req, res) {
     console.log(req.query);
     let movieName = req.query.title;
-    let url = `https://api.themoviedb.org/3/search/movie?api_key=668baa4bb128a32b82fe0c15b21dd699&language=en-US&query=${movieName}&page=2`;
+    let url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&query=${movieName}&page=2`;
     axios.get(url)
         .then(result => {
             console.log(req.query.title);
@@ -70,7 +72,7 @@ function searchHandler(req, res) {
 
 //tvCertificationsHandler function
 function tvCertificationsHandler(req,res){
-    let url =`https://api.themoviedb.org/3/certification/tv/list?api_key=60b47f14771c44b1da955019650eb9d2`
+    let url =`https://api.themoviedb.org/3/certification/tv/list?api_key=${apiKey}`
     axios.get(url)
     .then(result=>{
         console.log(result.data.certifications)
@@ -88,7 +90,7 @@ function tvCertificationsHandler(req,res){
 
 //Movie Certifications
 function movieCertificationsHandler(req,res){
-    let url =`https://api.themoviedb.org/3/certification/movie/list?api_key=60b47f14771c44b1da955019650eb9d2`
+    let url =`https://api.themoviedb.org/3/certification/movie/list?api_key=${apiKey}`
     axios.get(url)
     .then(result=>{
         console.log(result.data.certifications)
