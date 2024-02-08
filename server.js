@@ -25,18 +25,18 @@ function getJsonDataHandler(req,res){
     res.json((newData))
 }
 //Create a function to handle the server error (status 500)
-app.get('/error',(req,res)=>res.send(error()))
-app.use(function(err,req,res,text){
-    res.type('text/plain')
-    res.status(500)
-    res.send('internal server error 500')
-
-})
+//500 error handler
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Internal Server Error');
+});
 
 
 //Create a function to handle "page not found error" (status 404)
 
-app.get('*',(req,res)=>res.send("page not found error (status 404)"))
+app.use((req, res, next) => {
+    res.status(404).send('404 Not Found');
+});
 
 
 
