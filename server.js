@@ -71,39 +71,29 @@ function searchHandler(req, res) {
 }
 
 //tvCertificationsHandler function
-function tvCertificationsHandler(req,res){
-    let url =`https://api.themoviedb.org/3/certification/tv/list?api_key=${apiKey}`
+function tvCertificationsHandler(req, res) {
+    let url = `https://api.themoviedb.org/3/certification/tv/list?api_key=${apiKey}`;
     axios.get(url)
-    .then(result=>{
-        console.log(result.data.certifications)
-        let tvCertifications = result.data.certifications.map(ele =>{
-            return tvCertifications
-
+        .then(result => {
+            console.log(result.data.certifications);
+            res.json(result.data.certifications);
         })
-        res.json(tvCertifications)
-    })
-    .catch(error=>{
-        console.log(error)
-    })
-
+        .catch(error => {
+            console.log(error);
+        });
 }
 
 //Movie Certifications
-function movieCertificationsHandler(req,res){
-    let url =`https://api.themoviedb.org/3/certification/movie/list?api_key=${apiKey}`
+function movieCertificationsHandler(req, res) {
+    let url = `https://api.themoviedb.org/3/certification/movie/list?api_key=${apiKey}`;
     axios.get(url)
-    .then(result=>{
-        console.log(result.data.certifications)
-        let tvCertifications = result.data.certifications.map(ele =>{
-            return tvCertifications
-
+        .then(result => {
+            console.log(result.data.certifications);
+            res.json(result.data.certifications);
         })
-        res.json(tvCertifications)
-    })
-    .catch(error=>{
-        console.log(error)
-    })
-
+        .catch(error => {
+            console.log(error);
+        });
 }
 
 
