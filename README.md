@@ -3,7 +3,7 @@
 **Balqees Hmoud**
 
 ## WRRC
-![wrrc img](./Image/WRRC.jpg)
+![wrrc img](./Image/wrrc-database.jpg)
 
 ## Overview
 The app provides a variety of movies and TV programming
