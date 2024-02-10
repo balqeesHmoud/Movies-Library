@@ -1,3 +1,4 @@
+ Lab13
 'use strict';
 const express = require('express');
 const app = express();
@@ -23,6 +24,123 @@ function homeHandler(req, res) {
     res.send("welcome home")
 }
 
+
+const express = require('express')
+const app = express()
+require('dotenv').config()
+const axios = require('axios');
+const port = process.env.PORT;
+const apiKey=process.env.API_KEY;
+const jsonData = require('./Movie Data/data.json')
+
+//Create a constructor function to ensure your data follow the same format.
+function Movie (id,title,releaseDate,posterPath,overview){
+    this.id=id
+    this.title=title
+    this.releaseDate=releaseDate
+    this.posterPath=posterPath
+    this.overview=overview
+};
+//routes
+app.get('/trending', listTrendingMoviesHandler);
+app.get('/search',searchHandler);
+
+//TV Certifications
+app.get('/tv_certifications',tvCertificationsHandler);
+
+//Movie Certifications
+app.get('/movie_certifications',movieCertificationsHandler);
+
+
+
+
+//functions
+function listTrendingMoviesHandler (req,res){
+    let url =`https://api.themoviedb.org/3/trending/all/week?api_key=${apiKey}`
+    axios.get(url)
+    .then(result=>{
+        console.log(result.data.results)
+        let movesData = result.data.results.map(ele =>{
+            return new Movie(ele.id, ele.title, ele.release_date, ele.poster_path, ele.overview)
+
+        })
+        res.json(movesData)
+    })
+    .catch(error=>{
+        console.log(error)
+    })
+
+
+
+};
+// search function
+function searchHandler(req, res) {
+    console.log(req.query);
+    let movieName = req.query.title;
+    let url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&query=${movieName}&page=2`;
+    axios.get(url)
+        .then(result => {
+            console.log(req.query.title);
+            if (result.data.results) {
+                let moviesData = result.data.results.map(ele => {
+                    return new Movie(ele.id, ele.title, ele.release_date, ele.poster_path, ele.overview);
+                });
+                res.json(moviesData);
+            } else {
+                res.json([]); // Handle the case where there are no results
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+
+}
+
+//tvCertificationsHandler function
+function tvCertificationsHandler(req, res) {
+    let url = `https://api.themoviedb.org/3/certification/tv/list?api_key=${apiKey}`;
+    axios.get(url)
+        .then(result => {
+            console.log(result.data.certifications);
+            res.json(result.data.certifications);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+
+//Movie Certifications
+function movieCertificationsHandler(req, res) {
+    let url = `https://api.themoviedb.org/3/certification/movie/list?api_key=${apiKey}`;
+    axios.get(url)
+        .then(result => {
+            console.log(result.data.certifications);
+            res.json(result.data.certifications);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+
+
+
+//Favorite Page Endpoint: “/favorite”Response Example:Welcome to Favorite Page
+app.get('/favorite',getFavoriteHandler)
+function getFavoriteHandler(req,res){
+    res.send("Welcome to Favorite Page")
+}
+
+
+//Create a function to handle the server error (status 500)
+app.get('/error',(req,res)=>res.send(error()))
+app.use(function(err,req,res,text){
+    res.type('text/plain')
+    res.status(500)
+    res.send('internal server error 500')
+
+})
+ main
 
 
 function addMovieHandler(req, res) {
