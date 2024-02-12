@@ -1,4 +1,4 @@
- Lab13
+ 
 'use strict';
 const express = require('express');
 const app = express();
@@ -7,13 +7,26 @@ const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 const cors = require('cors');
-const port= 3005;
+const port= 3007;
+const axios = require('axios');
+// const port = process.env.PORT;
+const apiKey=process.env.API_KEY;
+const jsonData = require('./Movie Data/data.json')
 // const port = process.env.PORT || 3001;
 
 const { Client } = require('pg')
 const url = `postgres://balqees:0000@localhost:5432/moveislist`
 const client = new Client(url)
 
+//routes
+app.get('/trending', listTrendingMoviesHandler);
+app.get('/search',searchHandler);
+
+//TV Certifications
+app.get('/tv_certifications',tvCertificationsHandler);
+
+//Movie Certifications
+app.get('/movie_certifications',movieCertificationsHandler);
 //route 
 app.get('/', homeHandler);
 app.post('/addMovie', addMovieHandler);
@@ -25,13 +38,7 @@ function homeHandler(req, res) {
 }
 
 
-const express = require('express')
-const app = express()
-require('dotenv').config()
-const axios = require('axios');
-const port = process.env.PORT;
-const apiKey=process.env.API_KEY;
-const jsonData = require('./Movie Data/data.json')
+
 
 //Create a constructor function to ensure your data follow the same format.
 function Movie (id,title,releaseDate,posterPath,overview){
@@ -41,15 +48,7 @@ function Movie (id,title,releaseDate,posterPath,overview){
     this.posterPath=posterPath
     this.overview=overview
 };
-//routes
-app.get('/trending', listTrendingMoviesHandler);
-app.get('/search',searchHandler);
 
-//TV Certifications
-app.get('/tv_certifications',tvCertificationsHandler);
-
-//Movie Certifications
-app.get('/movie_certifications',movieCertificationsHandler);
 
 
 
@@ -140,7 +139,7 @@ app.use(function(err,req,res,text){
     res.send('internal server error 500')
 
 })
- main
+ 
 
 
 function addMovieHandler(req, res) {
