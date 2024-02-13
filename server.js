@@ -35,26 +35,60 @@ app.get('/', homeHandler);
 app.post('/addMovie', addMovieHandler);
 app.get('/getMovies', getMoviesHandler);
 
+app.put('/update/:id', updateMovieCommentsHandler);
+app.delete('/delete/:id', deleteMovieHandler);
+app.get('/get/:id', getMovieHandler);
+
+
+
 //handlers 
-function homeHandler(req, res) {
-    res.send("welcome home")
-}
 
-function addMovieHandler(req, res) {
-    console.log(req.body)
 
-    const { title, releaseDate, posterPath, overview, comments } = req.body // destructuring
-    const sql = `INSERT INTO movie_data (title, releaseDate, posterPath, overview, comments)
-                 VALUES ($1, $2, $3, $4, $5) RETURNING *;`;
-    const values = [title, releaseDate, posterPath, overview, comments]
-    client.query(sql, values).then((result) => {
-        console.log(result.rows);
-        res.status(201).json(result.rows);
+function updateMovieCommentsHandler(req, res) {
+    let movieId = req.params.id;
+    let { comments } = req.body;
+    let sql = `UPDATE movie_data SET comments = $1 WHERE id = $2;`;
+    let values = [comments, movieId];
+    client.query(sql, values).then(result => {
+        res.send("Successfully updated comments");
     }).catch(error => {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
     });
 }
+function deleteMovieHandler(req, res) {
+    let movieId = req.params.id;
+    let sql = `DELETE FROM movie_data WHERE id = $1;`;
+    let values = [movieId];
+    client.query(sql, values).then(result => {
+        res.status(204).send("Successfully deleted");
+    }).catch(error => {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    });
+}
+
+
+
+
+function getMovieHandler(req, res) {
+    let movieId = req.params.id;
+    let sql = `SELECT * FROM movie_data WHERE id = $1;`;
+    let values = [movieId];
+    client.query(sql, values).then(result => {
+        const data = result.rows[0];
+        res.json(data);
+    }).catch(error => {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    });
+}
+function homeHandler(req, res) {
+    res.send("welcome home")
+}
+
+
+
 
 function getMoviesHandler(req, res) {
     const sql = `SELECT * FROM movie_data;`
@@ -162,14 +196,18 @@ function getFavoriteHandler(req,res){
 
 
 //Create a function to handle the server error (status 500)
-app.get('/error',(req,res)=>res.send(error()))
-app.use(function(err,req,res,text){
-    res.type('text/plain')
-    res.status(500)
-    res.send('internal server error 500')
 
-})
- 
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Internal Server Error');
+});
+
+//Create a function to handle "page not found error" (status 404)
+
+app.use((req, res, next) => {
+    res.status(404).send('404 Not Found');
+});
+
 
 
 
