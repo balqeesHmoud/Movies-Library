@@ -1,4 +1,4 @@
-'use strict';
+ 'use strict';
 const express = require('express');
 const app = express();
 require('dotenv').config();
@@ -70,6 +70,7 @@ function deleteMovieHandler(req, res) {
 
 
 
+
 function getMovieHandler(req, res) {
     let movieId = req.params.id;
     let sql = `SELECT * FROM movie_data WHERE id = $1;`;
@@ -86,21 +87,8 @@ function homeHandler(req, res) {
     res.send("welcome home")
 }
 
-function addMovieHandler(req, res) {
-    console.log(req.body)
 
-    const { title, releaseDate, posterPath, overview, comments } = req.body // destructuring
-    const sql = `INSERT INTO movie_data (title, releaseDate, posterPath, overview, comments)
-                 VALUES ($1, $2, $3, $4, $5) RETURNING *;`;
-    const values = [title, releaseDate, posterPath, overview, comments]
-    client.query(sql, values).then((result) => {
-        console.log(result.rows);
-        res.status(201).json(result.rows);
-    }).catch(error => {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    });
-}
+
 
 function getMoviesHandler(req, res) {
     const sql = `SELECT * FROM movie_data;`
@@ -208,6 +196,7 @@ function getFavoriteHandler(req,res){
 
 
 //Create a function to handle the server error (status 500)
+
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Internal Server Error');
