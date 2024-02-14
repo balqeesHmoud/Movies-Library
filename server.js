@@ -9,41 +9,47 @@ const cors = require('cors');
 const axios = require('axios');
 const apiKey=process.env.API_KEY;
 const jsonData = require('./Movie Data/data.json')
-const port=3000;
-// const port = process.env.PORT;
-const psqlPort = process.env.PSQLPORT;
-const userName = process.env.USERNAME;
-const sqlPass = process.env.SQLPASS;
-const dataBaseName = process.env.DATABASENAME;
+const port = process.env.PORT;
+
 
 
 const { Client } = require('pg')
-const url = `postgres://balqees:0000@localhost:5432/moveislist`
+const url = process.env.url;
 const client = new Client(url)
 
 //routes
+//lab11
+app.get('/favorite',getFavoriteHandler)
+//lab12
 app.get('/trending', listTrendingMoviesHandler);
 app.get('/search',searchHandler);
-
 //TV Certifications
 app.get('/tv_certifications',tvCertificationsHandler);
-
 //Movie Certifications
 app.get('/movie_certifications',movieCertificationsHandler);
-//route 
+//lab13
 app.get('/', homeHandler);
 app.post('/addMovie', addMovieHandler);
 app.get('/getMovies', getMoviesHandler);
-
+//lab14
 app.put('/update/:id', updateMovieCommentsHandler);
 app.delete('/delete/:id', deleteMovieHandler);
-app.get('/get/:id', getMovieHandler);
+app.get('/get/:id', getMovieHandlerBYId);
+
+
+
+//Create a constructor function to ensure your data follow the same format.
+function Movie (ID,title,releaseDate,posterPath,overview){
+    this.ID=ID
+    this.title=title
+    this.releaseDate=releaseDate
+    this.posterPath=posterPath
+    this.overview=overview
+};
 
 
 
 //handlers 
-
-
 function updateMovieCommentsHandler(req, res) {
     let movieId = req.params.id;
     let { comments } = req.body;
@@ -70,7 +76,7 @@ function deleteMovieHandler(req, res) {
 
 
 
-function getMovieHandler(req, res) {
+function getMovieHandlerBYId(req, res) {
     let movieId = req.params.id;
     let sql = `SELECT * FROM movie_data WHERE id = $1;`;
     let values = [movieId];
@@ -114,22 +120,6 @@ function getMoviesHandler(req, res) {
 }
 
 
-
-
-//Create a constructor function to ensure your data follow the same format.
-function Movie (ID,title,releaseDate,posterPath,overview){
-    this.ID=ID
-    this.title=title
-    this.releaseDate=releaseDate
-    this.posterPath=posterPath
-    this.overview=overview
-};
-
-
-
-
-
-//functions
 function listTrendingMoviesHandler (req,res){
     let url =`https://api.themoviedb.org/3/trending/all/week?api_key=${apiKey}`
     axios.get(url)
@@ -201,7 +191,6 @@ function movieCertificationsHandler(req, res) {
 
 
 //Favorite Page Endpoint: “/favorite”Response Example:Welcome to Favorite Page
-app.get('/favorite',getFavoriteHandler)
 function getFavoriteHandler(req,res){
     res.send("Welcome to Favorite Page")
 }
@@ -214,7 +203,6 @@ app.use((err, req, res, next) => {
 });
 
 //Create a function to handle "page not found error" (status 404)
-
 app.use((req, res, next) => {
     res.status(404).send('404 Not Found');
 });
