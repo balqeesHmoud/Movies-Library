@@ -129,7 +129,8 @@ function listTrendingMoviesHandler (req,res){
     .then(result=>{
         console.log(result.data.results)
         let movesData = result.data.results.map(ele =>{
-            return new Movie(ele.ID, ele.title, ele.release_date, ele.poster_path, ele.overview)
+            let imgUrl = 'https://image.tmdb.org/t/p/w500/'
+            return new Movie(ele.ID, ele.title, ele.release_date, imgUrl+ele.poster_path, ele.overview)
 
         })
         res.json(movesData)
