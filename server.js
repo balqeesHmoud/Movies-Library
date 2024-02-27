@@ -35,7 +35,7 @@ app.get('/', homeHandler);
 app.post('/addMovie', addMovieHandler);
 app.get('/getMovies', getMoviesHandler);
 //lab14
-app.put('/update/:id', updateMovieCommentsHandler);
+app.patch('/update/:id', updateMovieCommentsHandler);
 app.delete('/delete/:id', deleteMovieHandler);
 app.get('/get/:id', getMovieHandlerBYId);
 
