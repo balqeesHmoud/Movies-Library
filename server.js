@@ -17,6 +17,9 @@ const { Client } = require('pg')
 const url = process.env.url;
 const client = new Client(url)
 
+app.use(cors());
+
+
 //routes
 //lab11
 app.get('/favorite',getFavoriteHandler)
