@@ -59,7 +59,7 @@ function updateMovieCommentsHandler(req, res) {
     let sql = `UPDATE movie_data SET comments = $1 WHERE id = $2;`;
     let values = [comments, movieId];
     client.query(sql, values).then(result => {
-        res.send("Successfully updated comments");
+        res.json({ success: true, message: "Successfully updated comments" });
     }).catch(error => {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
