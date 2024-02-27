@@ -42,11 +42,11 @@ app.get('/get/:id', getMovieHandlerBYId);
 
 
 //Create a constructor function to ensure your data follow the same format.
-function Movie (ID,title,releaseDate,posterPath,overview){
-    this.ID=ID
+function Movie (id,title,releasedate,posterpath,overview){
+    this.id=id
     this.title=title
-    this.releaseDate=releaseDate
-    this.posterPath=posterPath
+    this.releasedate=releasedate
+    this.posterpath=posterpath
     this.overview=overview
 };
 
@@ -99,7 +99,7 @@ function addMovieHandler(req, res) {
     console.log(req.body)
 
     const { title, releaseDate, posterPath, overview, comments } = req.body // destructuring
-    const sql = `INSERT INTO movie_data (title, releaseDate, posterPath, overview, comments)
+    const sql = `INSERT INTO movie_data (title, releasedate, posterpath, overview, comments)
                  VALUES ($1, $2, $3, $4, $5) RETURNING *;`;
     const values = [title, releaseDate, posterPath, overview, comments]
     client.query(sql, values).then((result) => {
@@ -130,7 +130,7 @@ function listTrendingMoviesHandler (req,res){
         console.log(result.data.results)
         let movesData = result.data.results.map(ele =>{
             let imgUrl = 'https://image.tmdb.org/t/p/w500/'
-            return new Movie(ele.ID, ele.title, ele.release_date, imgUrl+ele.poster_path, ele.overview)
+            return new Movie(ele.id, ele.title, ele.releasedate, imgUrl+ele.posterpath, ele.overview)
 
         })
         res.json(movesData)
